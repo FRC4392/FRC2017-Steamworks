@@ -1,6 +1,8 @@
 package org.usfirst.frc.team4392.robot;
 
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -12,6 +14,9 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public class Robot extends IterativeRobot {
 	Shooter shooter = new Shooter();
 	shooter.init();
+
+	private CANTalon test = new CANTalon(8);
+	private CANTalon test2 = new CANTalon(7);
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -44,7 +49,12 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
-		shooter.startShooter();
+		//shooter.startShooter();
+
+		SmartDashboard.putNumber("talon1", test.getOutputCurrent());
+		SmartDashboard.putNumber("talon2", test2.getOutputCurrent());
+		test.set(1);
+		test2.set(-1);
 	}
 
 	/**
