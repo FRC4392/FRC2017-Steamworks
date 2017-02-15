@@ -3,6 +3,7 @@ package org.usfirst.frc.team4392.robot;
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team4392.robot.Subsystems.Shooter;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -12,8 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends IterativeRobot {
-	Shooter shooter = new Shooter();
-	shooter.init();
+	private final Shooter shooter = new Shooter();
 
 	private CANTalon test = new CANTalon(8);
 	private CANTalon test2 = new CANTalon(7);
@@ -23,6 +23,7 @@ public class Robot extends IterativeRobot {
 	 * used for any initialization code.
 	 */
 	public void robotInit() {
+		shooter.init();
 	}
 
 	/**
