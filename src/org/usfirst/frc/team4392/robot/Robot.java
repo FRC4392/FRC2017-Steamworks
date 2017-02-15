@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	Shooter shooter = new Shooter();
+	shooter.init();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -42,6 +44,7 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control
 	 */
 	public void teleopPeriodic() {
+		shooter.startShooter();
 	}
 
 	/**
