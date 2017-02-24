@@ -19,7 +19,7 @@ public class Shooter {
     }
 
     public void startShooter(){
-        shootwheel.set(1);
+        shootwheel.set(-.4);
         intakewheel.set(1);
     }
     public void stopShooter(){

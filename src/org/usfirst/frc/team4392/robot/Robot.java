@@ -1,8 +1,11 @@
 package org.usfirst.frc.team4392.robot;
 
 import com.ctre.CANTalon;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team4392.robot.Subsystems.Drivetrain;
+import org.usfirst.frc.team4392.robot.Subsystems.Gearbox;
+import org.usfirst.frc.team4392.robot.Subsystems.Intake;
 import org.usfirst.frc.team4392.robot.Subsystems.Shooter;
 
 /**
@@ -14,9 +17,11 @@ import org.usfirst.frc.team4392.robot.Subsystems.Shooter;
  */
 public class Robot extends IterativeRobot {
 	private final Shooter shooter = new Shooter();
-
-	private CANTalon test = new CANTalon(8);
-	private CANTalon test2 = new CANTalon(7);
+	private final OI operatorInterface = new OI();
+	private final Drivetrain drivetrain = new Drivetrain();
+	private final CheesyDriveHelper cheesyDriveHelper = new CheesyDriveHelper();
+	private final Gearbox gearbox=new Gearbox();
+	private final Intake intake= new Intake();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -49,13 +54,31 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during operator control
 	 */
-	public void teleopPeriodic() {
-		//shooter.startShooter();
 
-		SmartDashboard.putNumber("talon1", test.getOutputCurrent());
-		SmartDashboard.putNumber("talon2", test2.getOutputCurrent());
-		test.set(1);
-		test2.set(-1);
+	public void teleopPeriodic() {
+		double leftSpeed = operatorInterface.driverController.getY(GenericHID.Hand.kLeft);
+		double rightSpeed = -operatorInterface.driverController.getX(GenericHID.Hand.kRight);
+
+		DriveSignal signal = cheesyDriveHelper.cheesyDrive(leftSpeed, rightSpeed, operatorInterface.driverController.getBumper(GenericHID.Hand.kRight));
+		drivetrain.setLeftRight(signal.leftMotor, signal.rightMotor);
+
+		if (operatorInterface.operatorController.getAButton()){
+			gearbox.set(DoubleSolenoid.Value.kForward);
+		} else if (operatorInterface.operatorController.getBButton()){
+			gearbox.set(DoubleSolenoid.Value.kReverse);
+		}
+
+		if (operatorInterface.operatorController.getXButton()){
+			intake.start();
+		} else if (operatorInterface.operatorController.getYButton()){
+			intake.stop();
+		}
+
+		if (operatorInterface.operatorController.getTriggerAxis(GenericHID.Hand.kRight) > .5){
+			shooter.startShooter();
+		} else {
+			shooter.stopShooter();
+		}
 	}
 
 	/**
