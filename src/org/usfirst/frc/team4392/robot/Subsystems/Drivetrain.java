@@ -16,8 +16,10 @@ public class Drivetrain {
         talonFL = new CANTalon(15);
         talonBL = new CANTalon( 16);
 
-        talonFL.setInverted(true);
-        talonBL.setInverted(true);
+        talonFL.setInverted(false);
+        talonBL.setInverted(false);
+        talonFR.setInverted(true);
+        talonBR.setInverted(true);
 
 
     }

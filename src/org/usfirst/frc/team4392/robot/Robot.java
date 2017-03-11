@@ -3,10 +3,7 @@ package org.usfirst.frc.team4392.robot;
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team4392.robot.Subsystems.Drivetrain;
-import org.usfirst.frc.team4392.robot.Subsystems.Gearbox;
-import org.usfirst.frc.team4392.robot.Subsystems.Intake;
-import org.usfirst.frc.team4392.robot.Subsystems.Shooter;
+import org.usfirst.frc.team4392.robot.Subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,6 +19,7 @@ public class Robot extends IterativeRobot {
 	private final CheesyDriveHelper cheesyDriveHelper = new CheesyDriveHelper();
 	private final Gearbox gearbox=new Gearbox();
 	private final Intake intake= new Intake();
+	private final Hanger hanger = new Hanger();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -57,7 +55,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopPeriodic() {
 		double leftSpeed = operatorInterface.driverController.getY(GenericHID.Hand.kLeft);
-		double rightSpeed = -operatorInterface.driverController.getX(GenericHID.Hand.kRight);
+		double rightSpeed = operatorInterface.driverController.getX(GenericHID.Hand.kRight);
 
 		DriveSignal signal = cheesyDriveHelper.cheesyDrive(leftSpeed, rightSpeed, operatorInterface.driverController.getBumper(GenericHID.Hand.kRight));
 		drivetrain.setLeftRight(signal.leftMotor, signal.rightMotor);
@@ -78,6 +76,12 @@ public class Robot extends IterativeRobot {
 			shooter.startShooter();
 		} else {
 			shooter.stopShooter();
+		}
+
+		if (operatorInterface.operatorController.getStartButton()){
+			hanger.startHanger();
+		} else {
+			hanger.stopHanger();
 		}
 	}
 
