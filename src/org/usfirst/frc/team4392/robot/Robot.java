@@ -20,6 +20,7 @@ public class Robot extends IterativeRobot {
 	private final Gearbox gearbox=new Gearbox();
 	private final Intake intake= new Intake();
 	private final Hanger hanger = new Hanger();
+	private final Timer autoTimer = new Timer();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -41,12 +42,19 @@ public class Robot extends IterativeRobot {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	public void autonomousInit() {
+		autoTimer.start();
+
 	}
 
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+		if (autoTimer.get() < 5) {
+			drivetrain.setLeftRight(-.5, -.5);
+		} else {
+			drivetrain.setLeftRight(0, 0);
+		}
 	}
 
 	/**

@@ -3,7 +3,7 @@ package org.usfirst.frc.team4392.robot.Subsystems;
 import com.ctre.CANTalon;
 
 /**
- * Created by basrobotics on 2/14/2017. 
+ * Created by basrobotics on 2/14/2017.
  */
 public class Shooter {
 
