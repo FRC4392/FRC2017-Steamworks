@@ -20,4 +20,8 @@ public class Hanger {
     public void stopHanger(){
         hangerSpark.set(0);
     }
+
+    public void reverse(){
+        hangerSpark.set(1);
+    }
 }

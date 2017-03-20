@@ -50,8 +50,8 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		if (autoTimer.get() < 5) {
-			drivetrain.setLeftRight(-.5, -.5);
+		if (autoTimer.get() < 3) {
+			drivetrain.setLeftRight(-.52, -.4);
 		} else {
 			drivetrain.setLeftRight(0, 0);
 		}
@@ -62,8 +62,15 @@ public class Robot extends IterativeRobot {
 	 */
 
 	public void teleopPeriodic() {
+
+		shooter.Log();
 		double leftSpeed = operatorInterface.driverController.getY(GenericHID.Hand.kLeft);
 		double rightSpeed = operatorInterface.driverController.getX(GenericHID.Hand.kRight);
+
+		if (operatorInterface.driverController.getBumper(GenericHID.Hand.kLeft)){
+			leftSpeed *= .4;
+			rightSpeed *= .4;
+		}
 
 		DriveSignal signal = cheesyDriveHelper.cheesyDrive(leftSpeed, rightSpeed, operatorInterface.driverController.getBumper(GenericHID.Hand.kRight));
 		drivetrain.setLeftRight(signal.leftMotor, signal.rightMotor);
@@ -86,8 +93,10 @@ public class Robot extends IterativeRobot {
 			shooter.stopShooter();
 		}
 
-		if (operatorInterface.operatorController.getStartButton()){
+		if (operatorInterface.operatorController.getStartButton()) {
 			hanger.startHanger();
+		} else if(operatorInterface.operatorController.getStartButton() && operatorInterface.operatorController.getBackButton()){
+			hanger.reverse();
 		} else {
 			hanger.stopHanger();
 		}
