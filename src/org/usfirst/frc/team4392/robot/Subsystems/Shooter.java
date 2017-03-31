@@ -13,10 +13,17 @@ public class Shooter {
     private CANTalon intakewheel = new CANTalon(12);
 
     public void init(){
-        //shootwheel.changeControlMode(CANTalon.TalonControlMode.Speed);
-        shootwheel.setFeedbackDevice(CANTalon.FeedbackDevice.CtreMagEncoder_Relative);
-        //shootwheel.configNominalOutputVoltage(0.0f, -0.0f);
-        //shootwheel.configPeakOutputVoltage(+12.0f, -12.0f);
+
+        shootwheel.setFeedbackDevice(CANTalon.FeedbackDevice.EncRising);
+        shootwheel.configNominalOutputVoltage(0.0f, -0.0f);
+        shootwheel.configPeakOutputVoltage(+12.0f, -12.0f);
+        shootwheel.configEncoderCodesPerRev(1024);
+        shootwheel.SetVelocityMeasurementPeriod(CANTalon.VelocityMeasurementPeriod.valueOf(10));
+        shootwheel.setF(.053);
+        shootwheel.setP(.1);
+        shootwheel.setD(.5);
+        shootwheel.changeControlMode(CANTalon.TalonControlMode.Speed);
+
 
         //intakewheel.setControlMode(CANTalon.TalonControlMode.PercentVbus);
 
@@ -25,8 +32,12 @@ public class Shooter {
     }
 
     public void startShooter(){
-        shootwheel.set(-.5);
-        intakewheel.set(1);
+        shootwheel.set(6000);
+        if (shootwheel.getSpeed() > 5700) {
+            intakewheel.set(1);
+        } else {
+            intakewheel.set(0);
+        }
     }
 
     public void Log(){

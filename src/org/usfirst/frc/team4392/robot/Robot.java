@@ -103,9 +103,11 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (operatorInterface.operatorController.getStartButton()) {
-			hanger.startHanger();
-		} else if(operatorInterface.operatorController.getStartButton() && operatorInterface.operatorController.getBackButton()){
-			hanger.reverse();
+			if(operatorInterface.operatorController.getBackButton()) {
+				hanger.reverse();
+			}else{
+				hanger.startHanger();
+				}
 		} else {
 			hanger.stopHanger();
 		}
