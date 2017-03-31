@@ -2,6 +2,7 @@ package org.usfirst.frc.team4392.robot;
 
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team4392.robot.Subsystems.*;
 
@@ -21,6 +22,7 @@ public class Robot extends IterativeRobot {
 	private final Intake intake= new Intake();
 	private final Hanger hanger = new Hanger();
 	private final Timer autoTimer = new Timer();
+	private final int AutoMode = 0;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -50,10 +52,17 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		if (autoTimer.get() < 3) {
-			drivetrain.setLeftRight(-.52, -.4);
-		} else {
-			drivetrain.setLeftRight(0, 0);
+
+		switch (AutoMode) {
+			case 0:
+				if (autoTimer.get() < 3) {
+					drivetrain.setLeftRight(-.52, -.4);
+				} else {
+					drivetrain.setLeftRight(0, 0);
+				}
+				break;
+			case 1:
+				drivetrain.driveStraightMagic(10);
 		}
 	}
 
