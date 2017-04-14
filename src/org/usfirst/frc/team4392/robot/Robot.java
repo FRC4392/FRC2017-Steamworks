@@ -19,10 +19,12 @@ public class Robot extends IterativeRobot {
 	private final Drivetrain drivetrain = new Drivetrain();
 	private final CheesyDriveHelper cheesyDriveHelper = new CheesyDriveHelper();
 	private final Gearbox gearbox=new Gearbox();
-	private final Intake intake= new Intake();
+	//private final Intake intake= new Intake();
 	private final Hanger hanger = new Hanger();
 	private final Timer autoTimer = new Timer();
-	private final int AutoMode = 0;
+	private int AutoMode = 0;
+	DriverStation ds = DriverStation.getInstance();
+	boolean isFirstAuto = false;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -30,6 +32,8 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 		shooter.init();
+		SmartDashboard.putNumber("Auto", 0);
+		AutoMode = (int) SmartDashboard.getNumber("Auto",0.0);
 	}
 
 	/**
@@ -44,6 +48,7 @@ public class Robot extends IterativeRobot {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	public void autonomousInit() {
+		autoTimer.reset();
 		autoTimer.start();
 
 	}
@@ -52,17 +57,38 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
+		AutoMode = (int) SmartDashboard.getNumber("Auto", 0);
 
 		switch (AutoMode) {
 			case 0:
+				shooter.stopShooter();
 				if (autoTimer.get() < 3) {
-					drivetrain.setLeftRight(-.52, -.4);
+					drivetrain.setLeftRight(-.5, -.5);
 				} else {
 					drivetrain.setLeftRight(0, 0);
 				}
 				break;
 			case 1:
-				drivetrain.driveStraightMagic(10);
+				if (autoTimer.get() < 12){
+					shooter.startShooter();
+					drivetrain.setLeftRight(0,0);
+				} else {
+					if (ds.getAlliance() == DriverStation.Alliance.Blue){
+						drivetrain.setLeftRight(-.7, -.5);
+					} else {
+						drivetrain.setLeftRight(-.5, -.7);
+					}
+
+					shooter.stopShooter();
+				}
+				break;
+			case 2:
+				if (!isFirstAuto){
+					isFirstAuto = true;
+					drivetrain.reset();
+				}
+				drivetrain.driveStraightMagic(-(97.3-35.5+9));
+				drivetrain.Log();
 		}
 	}
 
@@ -71,8 +97,9 @@ public class Robot extends IterativeRobot {
 	 */
 
 	public void teleopPeriodic() {
-
+		isFirstAuto = false;
 		shooter.Log();
+		drivetrain.Log();
 		double leftSpeed = operatorInterface.driverController.getY(GenericHID.Hand.kLeft);
 		double rightSpeed = operatorInterface.driverController.getX(GenericHID.Hand.kRight);
 
@@ -90,13 +117,13 @@ public class Robot extends IterativeRobot {
 			gearbox.set(DoubleSolenoid.Value.kReverse);
 		}
 
-		if (operatorInterface.operatorController.getXButton()){
+		/*if (operatorInterface.operatorController.getXButton()){
 			intake.start();
 		} else if (operatorInterface.operatorController.getYButton()){
 			intake.stop();
-		}
+		}*/
 
-		if (operatorInterface.operatorController.getTriggerAxis(GenericHID.Hand.kRight) > .5){
+		if ((operatorInterface.operatorController.getTriggerAxis(GenericHID.Hand.kRight) > .5) || (operatorInterface.driverController.getTriggerAxis(GenericHID.Hand.kRight)> .5)){
 			shooter.startShooter();
 		} else {
 			shooter.stopShooter();
@@ -117,6 +144,11 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
+	}
+
+	public void disabledPeriodic() {
+		super.disabledPeriodic();
+		drivetrain.Log();
 	}
 }
 

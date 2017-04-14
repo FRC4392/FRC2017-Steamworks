@@ -20,8 +20,8 @@ public class Shooter {
         shootwheel.configEncoderCodesPerRev(1024);
         shootwheel.SetVelocityMeasurementPeriod(CANTalon.VelocityMeasurementPeriod.valueOf(10));
         shootwheel.setF(.053);
-        shootwheel.setP(.1);
-        shootwheel.setD(.5);
+        shootwheel.setP(6);
+        shootwheel.setD(50);
         shootwheel.changeControlMode(CANTalon.TalonControlMode.Speed);
 
 
@@ -32,7 +32,8 @@ public class Shooter {
     }
 
     public void startShooter(){
-        shootwheel.set(6000);
+        shootwheel.enable();
+        shootwheel.set(5800);
         if (shootwheel.getSpeed() > 5700) {
             intakewheel.set(1);
         } else {
@@ -44,7 +45,7 @@ public class Shooter {
         SmartDashboard.putNumber("Speed", shootwheel.getSpeed());
     }
     public void stopShooter(){
-        shootwheel.set(0);
+        shootwheel.disable();
         intakewheel.set(0);
     }
 
