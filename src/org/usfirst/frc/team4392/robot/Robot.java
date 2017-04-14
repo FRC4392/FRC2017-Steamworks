@@ -62,11 +62,7 @@ public class Robot extends IterativeRobot {
 		switch (AutoMode) {
 			case 0:
 				shooter.stopShooter();
-				if (autoTimer.get() < 3) {
-					drivetrain.setLeftRight(-.5, -.5);
-				} else {
-					drivetrain.setLeftRight(0, 0);
-				}
+				drivetrain.driveStraightMagic(450);
 				break;
 			case 1:
 				if (autoTimer.get() < 12){
